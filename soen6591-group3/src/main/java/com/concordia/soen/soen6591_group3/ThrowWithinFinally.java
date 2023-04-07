@@ -42,6 +42,7 @@ public class ThrowWithinFinally
 			root.accept(visitor);
 			if(visitor.count > 0) {
 				System.out.println("Number of throw statements found in Finally block: " + visitor.count);
+				System.out.println("Location of the file:");
 				System.out.println(fileName);
 			}
 		}
