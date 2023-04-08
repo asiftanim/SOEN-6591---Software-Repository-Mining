@@ -24,6 +24,7 @@ public class ThrowWithinFinally
 {
     public static void main( String[] args )
     {
+    	//args[0] = "/Users/asiftanim/Desktop/Github/SOEN-6591---Software-Repository-Mining/soen6591-group3/src/main/java/com/concordia/soen/soen6591_group3/ExampleFinally.java";
     	ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
 		
 		for(String fileName : args) {
@@ -38,7 +39,7 @@ public class ThrowWithinFinally
 			parser.setSource(source.toCharArray());
 			
 			ASTNode root = parser.createAST(null);
-			Visitor visitor = new Visitor();
+			DetectThrowWithinFinally visitor = new DetectThrowWithinFinally();
 			root.accept(visitor);
 			if(visitor.count > 0) {
 				System.out.println("Number of throw statements found in Finally block: " + visitor.count);
@@ -54,7 +55,7 @@ public class ThrowWithinFinally
     	return source;
     }
     
-    static class Visitor extends ASTVisitor {
+    static class DetectThrowWithinFinally extends ASTVisitor {
     	int count = 0;
     	
     	@Override
