@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.ThrowStatement;
 import org.eclipse.jdt.core.dom.TryStatement;
@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.dom.TryStatement;
  */
 public class ThrowWithinFinally 
 {
+	static int count = 0;
     public static void main( String[] args )
     {
     	//args[0] = "/Users/asiftanim/Desktop/Github/SOEN-6591---Software-Repository-Mining/soen6591-group3/src/main/java/com/concordia/soen/soen6591_group3/ExampleFinally.java";
@@ -38,11 +39,35 @@ public class ThrowWithinFinally
 			
 			parser.setSource(source.toCharArray());
 			
-			ASTNode root = parser.createAST(null);
-			DetectThrowWithinFinally visitor = new DetectThrowWithinFinally();
-			root.accept(visitor);
-			if(visitor.count > 0) {
-				System.out.println("Number of throw statements found in Finally block: " + visitor.count);
+			final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+			cu.accept(new ASTVisitor() {
+				
+				@Override
+				public boolean visit(TryStatement node) {
+					Block finallyBlock = node.getFinally();
+					int startLine = 0;
+		    		if(finallyBlock != null) {
+		    			List<Statement> finnalyStatements = finallyBlock.statements();
+		    			for(Statement statement: finnalyStatements) {
+		    				if(statement instanceof ThrowStatement) {
+		    					if(count == 0) {
+		    						System.out.println("Throw statement found in finally block:");
+		    					}
+		    					startLine = cu.getLineNumber(statement.getStartPosition());
+		    					System.out.println(count + 1 +". "+ statement.toString() + " at line " + startLine);
+		    					count += 1;
+		    			         
+		    					return false;
+		    				}
+		    			}
+		    		}
+			        
+			        return super.visit(node);
+				}
+			});
+			
+			if(count > 0) {
+				System.out.println("\nNumber of throw statements found in Finally block: " + count);
 				System.out.println("Location of the file:");
 				System.out.println(fileName);
 			}
@@ -56,28 +81,4 @@ public class ThrowWithinFinally
     	return source;
     }
     
-    static class DetectThrowWithinFinally extends ASTVisitor {
-    	int count = 0;
-    	
-    	@Override
-    	public boolean visit(TryStatement node) {
-    		Block finallyBlock = node.getFinally();
-    		if(finallyBlock != null) {
-    			List<Statement> finnalyStatements = finallyBlock.statements();
-    			for(Statement statement: finnalyStatements) {
-    				if(statement instanceof ThrowStatement) {
-    					if(count == 0) {
-    						System.out.println("Throw statement found in finally block:");
-    					}
-    					System.out.println(count + 1 +". "+ statement.toString());
-    					count += 1;
-    			         
-    					return false;
-    				}
-    			}
-    		}
-    		
-    		return true;
-    	}
-	}
 }
