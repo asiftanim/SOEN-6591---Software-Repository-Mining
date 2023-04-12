@@ -17,6 +17,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.ThrowStatement;
 import org.eclipse.jdt.core.dom.TryStatement;
+import com.concordia.soen.soen6591_group3.NestedTry;
 
 public class DetectAntiPattern {
 	
@@ -51,6 +52,7 @@ public class DetectAntiPattern {
 	
 	public static void main(String[] args) {
 		DetectThrowsKitchenSink();
+		NestedTry.nestTry();
 	}
 	
 	static class DetectThrowsKitchenSink extends ASTVisitor{
