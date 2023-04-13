@@ -21,31 +21,31 @@ public class ExampleFinally {
 	
 	public void test2() {
 		try {
+			// comment
 			Files.lines(Paths.get(""));
 		}catch (IOException e) {
+			// comment in IOException
+			System.out.println("IOException");
+		}catch (Exception exp) {
 			// TODO: handle exception
-			try {
-				throw new Exception("aasdf");
-			} catch (Exception exp) {
-				// TODO: handle exception
-			} finally {
+		}finally {
 				throw new IllegalArgumentException("finally throw");
-			}
 		}
 	}
 	
 	public void test3() {
 		try {
 			Files.lines(Paths.get(""));
-		}catch (IOException e) {
+		}catch (NumberFormatException e) {
+			
+		}catch (RuntimeException re) {
 			// TODO: handle exception
-			try {
-				throw new Exception("aasdf");
-			} catch (Exception exp) {
-				// TODO: handle exception
-			} finally {
+			System.out.println("Runtime Ex");
+		}catch (Exception exp) {
+			// TODO: handle exception
+			test2();
+		}finally {
 				throw new NullPointerException("Null pointer exception");
-			}
 		}
 	}
 }
