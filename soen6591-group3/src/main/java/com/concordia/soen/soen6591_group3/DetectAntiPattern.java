@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.dom.TryStatement;
 public class DetectAntiPattern {
 	
 	static ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
+	static int count = 0;
 	
 	public static String read(String fileName) throws IOException {
     	Path path = Paths.get(fileName);
@@ -57,10 +58,51 @@ public class DetectAntiPattern {
 		}
 	}
 	
-	public static void DetectDestructiveWrapping() {
+//	public static void DetectDestructiveWrapping() {
+//		String source = "";
+//		String userDir = System.getProperty("user.dir");
+//		String path = "/src/main/java/com/concordia/soen/soen6591_group3/DestructiveWrapping.java";
+//		try {
+//			source = read(userDir+path);
+//		}catch(Exception ex) {
+//			System.out.println(ex);
+//		}
+//
+//		parser.setSource(source.toCharArray());
+//		
+//		final CompilationUnit compilationUnit = (CompilationUnit) parser.createAST(null);
+//		compilationUnit.accept(new ASTVisitor() {
+//			  @Override
+//			  public boolean visit(CatchClause node) {
+//				  
+//				List<Statement> statements = node.getBody().statements();
+//			    for(Statement statement: statements) {
+//			    	if(statement instanceof ThrowStatement) {
+//			    		System.out.println("Destructive wrapping detected");
+//			    		System.out.println(statement);
+//			    		int lineNumber = compilationUnit.getLineNumber(node.getStartPosition()) + 1;
+//			    		System.out.println("Line number: " + lineNumber);
+//			    		count++;
+//			    	}
+//			    }
+//			    return super.visit(node);
+//			  }
+//		});
+//		
+//		if(count > 0) {
+//	    	System.out.println("Location: ");
+//	    	System.out.println(path);
+//	    	System.out.println("Total found: " + count);
+//	    }else {
+//	    	System.out.println("No Destructive Wrapping found!");
+//	    }
+//	}
+	
+	public static void DetectNestedTry() {
+		count = 0;
 		String source = "";
 		String userDir = System.getProperty("user.dir");
-		String path = "/src/main/java/com/concordia/soen/soen6591_group3/DestructiveWrapping.java";
+		String path = "/src/main/java/com/concordia/soen/soen6591_group3/NestedTry.java";
 		try {
 			source = read(userDir+path);
 		}catch(Exception ex) {
@@ -68,22 +110,39 @@ public class DetectAntiPattern {
 		}
 
 		parser.setSource(source.toCharArray());
-		ASTNode root = parser.createAST(null);
 		
-		DestructiveWrappingVisitor visitor = new DestructiveWrappingVisitor();
-		root.accept(visitor);
+		final CompilationUnit compilationUnit = (CompilationUnit) parser.createAST(null);
+		compilationUnit.accept(new ASTVisitor() {
+			 
+			  @Override
+			  public boolean visit(TryStatement node) {
+				List<Statement> statements = node.getBody().statements();
+			    for(Statement statement: statements) {
+			    	if(statement instanceof TryStatement) {
+			    		System.out.println("Nested Try detected");
+			    		int lineNumber = compilationUnit.getLineNumber(node.getStartPosition()) + 1;
+			    		System.out.println("Line number: " + lineNumber);
+			    		count++;
+			    	}
+			    }
+			    return super.visit(node);
+			  }
+		});
 		
-		if(visitor.DWFound) {
+		if(count > 0) {
 	    	System.out.println("Location: ");
 	    	System.out.println(path);
+	    	System.out.println("Total found: " + count);
 	    }
 	}
 	
 	public static void main(String[] args) {
-		DetectThrowsKitchenSink();
+		//DetectThrowsKitchenSink();
 		
-		DetectDestructiveWrapping();
-		//testDW();
+		//DetectDestructiveWrapping();
+		
+		DetectNestedTry();
+		
 	}
 	
 	static class DetectThrowsKitchenSink extends ASTVisitor{
@@ -102,22 +161,9 @@ public class DetectAntiPattern {
 	}
 	
 	public static class DestructiveWrappingVisitor extends ASTVisitor {
-		  static boolean DWFound = false;
-		  @Override
-		  public boolean visit(CatchClause node) {
-			  
-			List<Statement> statements = node.getBody().statements();
-		    for(Statement statement: statements) {
-		    	if(statement instanceof ThrowStatement) {
-		    		System.out.println("Destructive wrapping detected");
-		    		System.out.println(statement);
-		    		System.out.println("Line number: " + node.getStartPosition());
-		    		DWFound = true;
-		    	}
-		    }
-		    return super.visit(node);
-		  }
+		  
 	}
+
 }
 
 
