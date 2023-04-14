@@ -36,8 +36,57 @@ public class DetectAntiPattern {
     	return source;
     }
 	
+	public static void DetectThrowWithinFinally() {
+		System.out.println("Detect Throw Within Finally Started...");
+		count = 0;
+		String source = "";
+		String userDir = System.getProperty("user.dir");
+		String path = "/src/main/java/com/concordia/soen/soen6591_group3/ExampleFinally.java";
+		try {
+			source = read(userDir+path);
+		}catch(Exception ex) {
+			System.out.println(ex);
+		}
+		
+		parser.setSource(source.toCharArray());
+		
+		final CompilationUnit compilationUnit = (CompilationUnit) parser.createAST(null);
+		compilationUnit.accept(new ASTVisitor() {
+			@Override
+			public boolean visit(TryStatement node) {
+				Block finallyBlock = node.getFinally();
+				int startLine = 0;
+	    		if(finallyBlock != null) {
+	    			List<Statement> finnalyStatements = finallyBlock.statements();
+	    			for(Statement statement: finnalyStatements) {
+	    				if(statement instanceof ThrowStatement) {
+	    					if(count == 0) {
+	    						System.out.println("Throw statement found in finally block:");
+	    					}
+	    					startLine = compilationUnit.getLineNumber(statement.getStartPosition());
+	    					System.out.println(count + 1 +". "+ statement.toString() + " at line " + startLine);
+	    					count += 1;
+	    			         
+	    					return false;
+	    				}
+	    			}
+	    		}
+		        
+		        return super.visit(node);
+			}
+		});
+		
+		if(count > 0) {
+			System.out.println("\nNumber of throw statements found in Finally block: " + count);
+			System.out.println("Location of the file:");
+			System.out.println(path);
+			System.out.println();
+		}
+	}
+	
 	public static void DetectThrowsKitchenSink() {
 		System.out.println("Detect Throws Kitchen Sink Started...");
+		count = 0;
 		String source = "";
 		String userDir = System.getProperty("user.dir");
 		String path = "/src/main/java/com/concordia/soen/soen6591_group3/ThrowsKitchenSink.java";
@@ -48,22 +97,38 @@ public class DetectAntiPattern {
 		}
 		
 		parser.setSource(source.toCharArray());
-		ASTNode root = parser.createAST(null);
 		
-		DetectThrowsKitchenSink visitor = new DetectThrowsKitchenSink();
-		root.accept(visitor);
+		final CompilationUnit compilationUnit = (CompilationUnit) parser.createAST(null);
+		compilationUnit.accept(new ASTVisitor() {
+			@Override
+	    	public boolean visit(MethodDeclaration node) {
+	    		if(node.thrownExceptionTypes().size() > 3) {
+	    			System.out.println("Thorws Kitchen Sink Detected."); 
+	    			int lineNumber = compilationUnit.getLineNumber(node.getStartPosition());
+	    			System.out.println("Line number: " + lineNumber);
+	    			count++;
+	    		}
+	    		
+	    		return super.visit(node);
+	    	}
+		});
 		
-		if(visitor.count > 0) {
-			System.out.println("Number of throw found: " + visitor.count);
-			System.out.println();
+		if(count > 0) {
+			System.out.println("Location: ");
+	    	System.out.println(path);
+	    	System.out.println("Total found: " + count);
+	    	System.out.println();
+		}else {
+			System.out.println("No Throws Kitchen Sink Detected");
 		}
 	}
 	
 	public static void DetectDestructiveWrapping() {
 		System.out.println("Detect Destructive Wrapping Started...");
+		count = 0;
 		String source = "";
 		String userDir = System.getProperty("user.dir");
-		String path = "/src/main/java/com/concordia/soen/soen6591_group3/NestedTry.java";
+		String path = "/src/main/java/com/concordia/soen/soen6591_group3/DestructiveWrapping.java";
 		try {
 			source = read(userDir+path);
 		}catch(Exception ex) {
@@ -81,7 +146,6 @@ public class DetectAntiPattern {
 			    for(Statement statement: statements) {
 			    	if(statement instanceof ThrowStatement) {
 			    		System.out.println("Destructive wrapping detected");
-			    		System.out.println(statement);
 			    		int lineNumber = compilationUnit.getLineNumber(node.getStartPosition()) + 1;
 			    		System.out.println("Line number: " + lineNumber);
 			    		count++;
@@ -141,31 +205,15 @@ public class DetectAntiPattern {
 	}
 	
 	public static void main(String[] args) {
+		
+		DetectThrowWithinFinally();
+		
 		DetectThrowsKitchenSink();
 		
 		DetectDestructiveWrapping();
 		
 		DetectNestedTry();
 		
-	}
-	
-	static class DetectThrowsKitchenSink extends ASTVisitor{
-		int count = 0;
-    	
-    	@Override
-    	public boolean visit(MethodDeclaration node) {
-    		if(node.thrownExceptionTypes().size() > 3) {
-    			System.out.println("Thorws Kitchen Sink Detected."); 
-    			count = node.thrownExceptionTypes().size();
-    			return true;
-    		}
-    		
-    		return false;
-    	}
-	}
-	
-	public static class DestructiveWrappingVisitor extends ASTVisitor {
-		  
 	}
 
 }

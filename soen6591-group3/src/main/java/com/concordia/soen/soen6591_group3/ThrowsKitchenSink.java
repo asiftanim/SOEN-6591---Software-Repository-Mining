@@ -4,14 +4,6 @@ import java.util.EmptyStackException;
 
 public class ThrowsKitchenSink {
 	
-	public static void main(String[] args) {
-		try {
-			KitchenSink();
-		}catch(Exception ex) {
-			
-		}
-	}
-	
 	public static void KitchenSink() throws Exception, ArithmeticException, ArithmeticException, EmptyStackException  {
 		int x = 10, y = 0;
 		String name = null;
@@ -34,6 +26,11 @@ public class ThrowsKitchenSink {
 		}else {
 			throw new EmptyStackException();
 		}
+		
+	}
+	
+	public static void KitchenSink2() throws NullPointerException, Exception, ArithmeticException, ArithmeticException, EmptyStackException  {
+		
 		
 	}
 }
