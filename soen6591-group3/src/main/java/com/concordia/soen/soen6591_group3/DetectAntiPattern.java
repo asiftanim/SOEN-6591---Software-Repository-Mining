@@ -63,7 +63,7 @@ public class DetectAntiPattern {
 		System.out.println("Detect Destructive Wrapping Started...");
 		String source = "";
 		String userDir = System.getProperty("user.dir");
-		String path = "/src/main/java/com/concordia/soen/soen6591_group3/DestructiveWrapping.java";
+		String path = "/src/main/java/com/concordia/soen/soen6591_group3/NestedTry.java";
 		try {
 			source = read(userDir+path);
 		}catch(Exception ex) {
