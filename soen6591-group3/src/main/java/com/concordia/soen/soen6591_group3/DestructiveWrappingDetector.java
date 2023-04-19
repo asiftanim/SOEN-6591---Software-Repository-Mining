@@ -10,7 +10,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.ThrowStatement;
 
-public class DestructiveWrappingDetector {
+public class DestructiveWrappingDetector extends AntiPattern {
 	static ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
 	static int count = 0;
 	static int totalCount = 0;
@@ -21,7 +21,7 @@ public class DestructiveWrappingDetector {
 		for(String file : fileList) {
 			DetectDestructiveWrapping(file);
 		}
-		PrintAntiPatterns();
+		printAntiPatterns(antiPatternList);
 	}
 	
 	public static void DetectDestructiveWrapping(String file) {
@@ -83,18 +83,6 @@ public class DestructiveWrappingDetector {
 	    	antiPatternModel.setTotalFound(count);
 	    	antiPatternList.add(antiPatternModel);
 	    }
-		
-	}
-	
-	public static void PrintAntiPatterns() {
-		if(antiPatternList.size() > 0) {
-			for(AntiPatternModel model : antiPatternList) {
-				model.print();
-				System.out.println();
-			}
-		}else {
-			System.out.println("List is empty");
-		}
 		
 	}
 }

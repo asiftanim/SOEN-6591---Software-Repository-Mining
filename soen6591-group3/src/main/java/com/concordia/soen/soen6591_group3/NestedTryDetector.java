@@ -8,10 +8,9 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.ThrowStatement;
 import org.eclipse.jdt.core.dom.TryStatement;
 
-public class NestedTryDetector {
+public class NestedTryDetector extends AntiPattern {
 	static ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
 	static int count = 0;
 	static int totalCount = 0;
@@ -22,7 +21,7 @@ public class NestedTryDetector {
 		for(String file : fileList) {
 			DetectNestedTry(file);
 		}
-		PrintAntiPatterns();
+		printAntiPatterns(antiPatternList);
 	}
 	
 	public static void DetectNestedTry(String file) {
@@ -98,18 +97,6 @@ public class NestedTryDetector {
 	    	antiPatternModel.setTotalFound(count);
 	    	antiPatternList.add(antiPatternModel);
 	    }
-	}
-	
-	public static void PrintAntiPatterns() {
-		if(antiPatternList.size() > 0) {
-			for(AntiPatternModel model : antiPatternList) {
-				model.print();
-				System.out.println();
-			}
-		}else {
-			System.out.println("List is empty");
-		}
-		
 	}
 	
 }

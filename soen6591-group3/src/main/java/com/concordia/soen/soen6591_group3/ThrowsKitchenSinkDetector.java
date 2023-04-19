@@ -8,10 +8,8 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.TryStatement;
 
-public class ThrowsKitchenSinkDetector {
+public class ThrowsKitchenSinkDetector extends AntiPattern {
 	static ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
 	static int totalCount = 0;
 	static int count = 0;
@@ -22,7 +20,7 @@ public class ThrowsKitchenSinkDetector {
 		for(String file : fileList) {
 			DetectThrowsKitchenSink(file);
 		}
-		PrintAntiPatterns();
+		printAntiPatterns(antiPatternList);
 	}
 	
 	public static void DetectThrowsKitchenSink(String file) {
@@ -58,17 +56,5 @@ public class ThrowsKitchenSinkDetector {
 	    	antiPatternModel.setTotalFound(count);
 	    	antiPatternList.add(antiPatternModel);
 	    }
-	}
-	
-	public static void PrintAntiPatterns() {
-		if(antiPatternList.size() > 0) {
-			for(AntiPatternModel model : antiPatternList) {
-				model.print();
-				System.out.println();
-			}
-		}else {
-			System.out.println("List is empty");
-		}
-		
 	}
 }
