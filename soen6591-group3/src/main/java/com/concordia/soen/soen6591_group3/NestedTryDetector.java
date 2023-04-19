@@ -52,7 +52,8 @@ public class NestedTryDetector {
 			    		antiPatternModel.setLineNumber(Integer.toString(compilationUnit.getLineNumber(statement.getStartPosition())));
 			    	}
 			    	
-			    	else if(statement.getNodeType() == Statement.FOR_STATEMENT) {
+			    	else if(statement.getNodeType() == Statement.FOR_STATEMENT || statement.getNodeType() == Statement.IF_STATEMENT
+			    			|| statement.getNodeType() == Statement.SWITCH_STATEMENT) {
 			    		//System.out.println(statement);
 			    		statement.accept(new ASTVisitor() {
 			    		  @Override
@@ -82,40 +83,9 @@ public class NestedTryDetector {
 					    		antiPatternModel.setLineNumber(lineNumber);
 			    			}
 					    		
-			  					
 			  					return super.visit(node);
 			  		      }
 			    		});
-			    	}
-			    	
-			    	else if(statement.getNodeType() == Statement.IF_STATEMENT) {
-			    		statement.accept(new ASTVisitor() {
-				    		@Override
-				  			  public boolean visit(TryStatement node)
-				  			  {
-						    		count++;
-						    		totalCount++;
-						    		antiPatternModel.setAntiPatternType("Nested Try");
-						    		antiPatternModel.setLineNumber(Integer.toString(compilationUnit.getLineNumber(node.getStartPosition())));
-						    		
-				  					return super.visit(node);
-				  		      }
-				    		});
-			    	}
-			    	
-			    	else if(statement.getNodeType() == Statement.SWITCH_STATEMENT) {
-			    		statement.accept(new ASTVisitor() {
-				    		@Override
-				  			  public boolean visit(TryStatement node)
-				  			  {
-						    		count++;
-						    		totalCount++;
-						    		antiPatternModel.setAntiPatternType("Nested Try");
-						    		antiPatternModel.setLineNumber(Integer.toString(compilationUnit.getLineNumber(node.getStartPosition())));
-				  					
-				  					return super.visit(node);
-				  		      }
-				    		});
 			    	}
 			    	
 			    }

@@ -55,7 +55,8 @@ public class ThrowWithinFinallyDetector {
 					    		antiPatternModel.setLineNumber(Integer.toString(compilationUnit.getLineNumber(statement.getStartPosition())));
 					    	}
 					    	
-					    	else if(statement.getNodeType() == Statement.FOR_STATEMENT) {
+					    	else if(statement.getNodeType() == Statement.FOR_STATEMENT || statement.getNodeType() == Statement.WHILE_STATEMENT
+					    			|| statement.getNodeType() == Statement.IF_STATEMENT || statement.getNodeType() == Statement.SWITCH_STATEMENT) {
 					    		//System.out.println(statement);
 					    		statement.accept(new ASTVisitor() {
 					    		  @Override
@@ -69,52 +70,6 @@ public class ThrowWithinFinallyDetector {
 					  				return super.visit(node);
 					  		      }
 					    		});
-					    	}
-					    	
-					    	else if(statement.getNodeType() == Statement.WHILE_STATEMENT) {
-					    		
-					    		statement.accept(new ASTVisitor() {
-					    		@Override
-					  			  public boolean visit(ThrowStatement node)
-					  			  {
-					    			count++;
-			  			    		totalCount++;
-			  			    		antiPatternModel.setAntiPatternType("Throw Within Finally");
-			  			    		antiPatternModel.setLineNumber(Integer.toString(compilationUnit.getLineNumber(node.getStartPosition())));
-					  				
-			  			    		return super.visit(node);
-					  		      }
-					    		});
-					    	}
-					    	
-					    	else if(statement.getNodeType() == Statement.IF_STATEMENT) {
-					    		statement.accept(new ASTVisitor() {
-						    		@Override
-						  			  public boolean visit(ThrowStatement node)
-						  			  {
-						    			count++;
-				  			    		totalCount++;
-				  			    		antiPatternModel.setAntiPatternType("Throw Within Finally");
-				  			    		antiPatternModel.setLineNumber(Integer.toString(compilationUnit.getLineNumber(node.getStartPosition())));
-						  				
-										 return super.visit(node);
-						  		      }
-						    		});
-					    	}
-					    	
-					    	else if(statement.getNodeType() == Statement.SWITCH_STATEMENT) {
-					    		statement.accept(new ASTVisitor() {
-						    		@Override
-						  			  public boolean visit(ThrowStatement node)
-						  			  {
-						    			count++;
-				  			    		totalCount++;
-				  			    		antiPatternModel.setAntiPatternType("Throw Within Finally");
-				  			    		antiPatternModel.setLineNumber(Integer.toString(compilationUnit.getLineNumber(node.getStartPosition())));
-						  				
-				  			    		return super.visit(node);
-						  		      }
-						    		});
 					    	}
 					    	
 					    }

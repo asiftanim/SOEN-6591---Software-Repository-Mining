@@ -17,11 +17,11 @@ public class DetectAntiPattern {
 		while(true) {
 			System.out.println();
 			Scanner scan = new Scanner(System.in);
-			System.out.println("Choose option");
 			System.out.println("1. DestructiveWrappingDetector");
 			System.out.println("2. NestedTryDetector");
 			System.out.println("3. ThrowsKitchenSinkDetector");
 			System.out.println("4. ThrowWithinFinallyDetector");
+			System.out.print("Choose option:");
 			
 			switch(scan.nextLine()) {
 				case "1":
