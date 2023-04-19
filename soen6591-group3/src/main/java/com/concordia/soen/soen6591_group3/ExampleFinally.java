@@ -29,7 +29,16 @@ public class ExampleFinally {
 		}catch (Exception exp) {
 			// TODO: handle exception
 		}finally {
-				throw new IllegalArgumentException("finally throw");
+			for(int i=0; i<10; i++) {
+				try {
+					
+				}catch(Exception e) {
+					
+				}finally {
+					throw new IllegalArgumentException("finally throw");
+				}
+				
+			}
 		}
 	}
 	
@@ -45,7 +54,10 @@ public class ExampleFinally {
 			// TODO: handle exception
 			test2();
 		}finally {
+			if(true) {
 				throw new NullPointerException("Null pointer exception");
+			}
+				
 		}
 	}
 }

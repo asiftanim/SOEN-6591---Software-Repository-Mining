@@ -17,11 +17,20 @@ public class NestedTry {
 	public static void nestTry2() {
 		try {
 			try {
-				try {
-					int x = 10/5;
-				}catch(ArithmeticException e) {
-					
+				if(true) {
+					try {
+						while(true) {
+							try {
+								
+							}catch(Exception e) {
+								
+							}
+						}
+					}catch(ArithmeticException e) {
+						
+					}
 				}
+				
 			}
 			catch(Exception e) {
 				
