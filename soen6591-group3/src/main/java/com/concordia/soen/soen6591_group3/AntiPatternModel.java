@@ -17,21 +17,27 @@ public class AntiPatternModel {
 	public String getAntiPatternType() {
 		return antiPatternType;
 	}
+	
 	public void setAntiPatternType(String antiPatternType) {
 		this.antiPatternType = antiPatternType;
 	}
+	
 	public String getLineNumber() {
 		return String.join(",", this.lineNumber);
 	}
+	
 	public String getLocation() {
 		return location;
 	}
+	
 	public void setLocation(String location) {
 		this.location = location;
 	}
+	
 	public int getTotalFound() {
 		return totalFound;
 	}
+	
 	public void setTotalFound(int totalFound) {
 		this.totalFound = totalFound;
 	}

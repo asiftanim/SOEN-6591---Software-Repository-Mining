@@ -6,8 +6,7 @@ import java.util.Scanner;
 public class DetectAntiPattern {
 	
 	public static void main(String[] args) throws InterruptedException {
-		String userDir = System.getProperty("user.dir");
-		
+//		String userDir = System.getProperty("user.dir");
 		//Github URL - https://github.com/spring-projects/spring-boot
 		String path = "/Users/asiftanim/Downloads/spring-framework-main";
 		//String path = userDir + "/src/main/java/com/concordia/soen/soen6591_group3";
@@ -21,7 +20,7 @@ public class DetectAntiPattern {
 			System.out.println("2. NestedTryDetector");
 			System.out.println("3. ThrowsKitchenSinkDetector");
 			System.out.println("4. ThrowWithinFinallyDetector");
-			System.out.print("Choose option:");
+			System.out.print("Choose option: ");
 			
 			switch(scan.nextLine()) {
 				case "1":
